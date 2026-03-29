@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neil's View: The Shoreline Sanctuary</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@100;300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #D4AF37;
@@ -15,31 +15,22 @@
         }
 
         body {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Inter', sans-serif;
             background: #000;
             color: #f5efe8;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
         .main-bg {
             position: fixed;
             inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), 
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), 
                         url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&q=80&w=2000") center/cover fixed;
             z-index: -2;
         }
 
-        .wood-overlay {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.15;
-            mix-blend-mode: multiply;
-            background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
-            z-index: -1;
-        }
-
+        /* Glass and Patterns */
         .reeded-glass {
             background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 6px),
                               radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 80%);
@@ -54,6 +45,32 @@
             background-size: 100% 100%, 100% 100%, 100% 33.3%;
         }
 
+        /* News Masthead Style Typography */
+        .baaboi-title { font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic; }
+        .baaboi-nav-item { font-family: 'Inter', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; }
+        
+        /* Drop Cap */
+        .drop-cap::first-letter {
+            font-size: 5rem;
+            font-weight: 900;
+            float: left;
+            margin-right: 1rem;
+            line-height: 0.85;
+            color: var(--red);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Scrollers */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Active Tab State */
+        .nav-active {
+            color: white !important;
+            border-bottom: 4px solid var(--red);
+            background: rgba(255,255,255,0.05);
+        }
+
         @keyframes riseVapor {
             0% { transform: translateY(10px) scale(0.8); opacity: 0; }
             20% { opacity: 0.5; }
@@ -61,206 +78,244 @@
         }
         .vapor-wisp { animation: riseVapor 5s infinite ease-in-out; }
 
-        .summary-first-letter::first-letter {
-            font-size: 4.5rem;
-            font-weight: 900;
-            float: left;
-            margin-right: 1.25rem;
-            line-height: 1;
-            color: var(--red);
-            font-family: 'Inter', sans-serif;
-            font-style: normal;
-        }
-
-        .tab-active {
-            background-color: var(--mahogany);
-            color: white;
-            border-bottom: 4px solid var(--red);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-        }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .book-card { transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1); }
-        .book-card:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8); }
-
         .loader-spin {
-            border: 2px solid rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
             border-top: 2px solid var(--gold);
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="relative">
+<body class="relative min-h-screen">
     <div class="main-bg"></div>
-    <div class="wood-overlay"></div>
 
-    <nav class="fixed top-0 left-0 right-0 z-[150] bg-black/80 backdrop-blur-3xl border-b-[6px] border-[#4a3426]">
-        <div class="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto no-scrollbar py-4 px-6 relative">
-            <div id="tab-list" class="flex flex-nowrap items-center gap-4 md:gap-8">
-                <!-- Injected via JS -->
+    <!-- BAABOI STYLE HORIZONTAL NAV -->
+    <nav class="fixed top-0 left-0 right-0 z-[200] bg-black border-b-[6px] border-[#4a3426] shadow-2xl backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto flex items-center justify-start md:justify-center overflow-x-auto no-scrollbar px-4 h-20">
+            <div id="main-nav" class="flex flex-nowrap items-center h-full">
+                <!-- Navigation tabs injected by JS -->
             </div>
-            <div class="flex items-center gap-3 ml-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/40 whitespace-nowrap shrink-0 animate-pulse">
-                <span>Sanctuary</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-red-700"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="ml-auto pl-8 pr-4 md:hidden text-red-600 animate-pulse">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto relative z-10 pt-32 px-4">
-        <header class="relative mb-24 rounded-sm overflow-hidden border-x-4 border-b-4 border-[#4a3426] shadow-2xl">
+    <!-- CONTENT WRAPPER -->
+    <div class="max-w-7xl mx-auto relative z-10 pt-32 px-4 pb-20">
+        
+        <!-- DASHBOARD MASTHEAD -->
+        <header class="relative mb-24 rounded-sm overflow-hidden border-x-[1px] border-b-[10px] border-[#4a3426] shadow-2xl bg-black">
             <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1493106819501-66d381c446a1?q=80" class="w-full h-full object-cover brightness-[0.7]">
-                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/85"></div>
-                <div class="absolute inset-0 backdrop-blur-md opacity-90 reeded-glass"></div>
+                <img src="https://images.unsplash.com/photo-1493106819501-66d381c446a1?q=80" class="w-full h-full object-cover brightness-[0.6]">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/90"></div>
+                <div class="absolute inset-0 opacity-90 reeded-glass"></div>
             </div>
-            <div class="relative z-10 p-16 md:p-32 flex flex-col items-center justify-center text-center">
-                <h1 class="text-xl md:text-3xl font-extralight uppercase mb-8" style="letter-spacing: 1.2em; padding-left: 1.2em; color: white;">Neil's <span class="text-red-600 font-normal">View</span></h1>
-                <p class="text-[11px] font-black uppercase text-white/90 border-b border-white/30 pb-3 mb-12" style="letter-spacing: 0.8em; padding-left: 0.8em;">The Shoreline Sanctuary</p>
-                <p class="text-xl md:text-2xl lg:text-3xl font-extralight uppercase text-[#D4AF37] leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] max-w-5xl" style="letter-spacing: 0.3em; padding-left: 0.3em;">
-                    "Books, coffee, sun, waves hitting the shoreline rhythmically....and <span class="text-red-600 font-normal lowercase tracking-widest italic">a bit of love.</span>"
-                </p>
-                <div id="header-cup-root" class="mt-12"></div>
+
+            <div class="relative z-10 p-16 md:p-32 flex flex-col items-center text-center">
+                <div class="max-w-5xl">
+                    <h1 class="text-3xl md:text-5xl baaboi-title text-white mb-6 uppercase tracking-[1.2em] pl-[1.2em] drop-shadow-2xl">
+                        Neil's <span class="text-red-700">View</span>
+                    </h1>
+                    <div class="h-1 w-24 bg-red-700 mx-auto mb-8"></div>
+                    <p class="text-[12px] font-black uppercase text-white/70 tracking-[0.8em] pl-[0.8em] mb-12">The Shoreline Sanctuary</p>
+                    
+                    <p class="text-2xl md:text-4xl font-light italic leading-snug text-[#D4AF37] baaboi-title drop-shadow-lg mb-12">
+                        "Books, coffee, sun, waves hitting the shoreline rhythmically....and <span class="text-red-700 not-italic lowercase tracking-widest font-black">a bit of love.</span>"
+                    </p>
+
+                    <div id="header-cup-container"></div>
+                </div>
             </div>
         </header>
 
-        <main class="mb-32">
-            <div id="nyt-header" class="hidden mb-16">
-                <div class="bg-[#2a1b14]/95 p-12 border-b-8 border-[#4a3426] text-center rounded-sm shadow-2xl">
-                    <h2 class="text-3xl md:text-5xl font-extralight italic text-white tracking-[0.3em] uppercase opacity-90">Full Top 10</h2>
-                    <p id="nyt-date-display" class="text-[11px] font-black uppercase tracking-[0.6em] text-red-500 mt-5"></p>
-                    <div class="flex justify-center gap-12 mt-10">
-                        <button onclick="setNytFilter('fiction')" id="btn-fiction" class="text-[12px] font-black uppercase tracking-[0.4em] pb-3 border-b-2 transition-all">fiction</button>
-                        <button onclick="setNytFilter('nonfiction')" id="btn-nonfiction" class="text-[12px] font-black uppercase tracking-[0.4em] pb-3 border-b-2 transition-all">nonfiction</button>
-                    </div>
-                </div>
+        <!-- SUB-NAVIGATION (Ticker style for NYT) -->
+        <div id="sub-nav-container" class="hidden mb-16 px-4">
+            <div class="flex items-center gap-10 border-y border-white/10 py-6 overflow-x-auto no-scrollbar">
+                <span class="text-red-600 font-black uppercase text-[11px] tracking-widest whitespace-nowrap border-r border-white/20 pr-10">Latest Bestsellers</span>
+                <button onclick="setNytSubTab('fiction')" id="btn-fiction" class="baaboi-nav-item text-white/50 hover:text-white transition-all text-xs">Fiction</button>
+                <button onclick="setNytSubTab('nonfiction')" id="btn-nonfiction" class="baaboi-nav-item text-white/50 hover:text-white transition-all text-xs">Non-Fiction</button>
+                <span id="display-date" class="ml-auto text-[10px] uppercase font-black tracking-widest text-white/30 whitespace-nowrap"></span>
             </div>
-            <div id="book-grid" class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 pb-24"></div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <main id="dashboard-grid" class="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Items injected by JS -->
         </main>
 
-        <footer class="relative mt-32 border-t-[16px] border-[#4a3426] overflow-hidden min-h-[580px]">
-            <div class="absolute inset-0 z-0">
-                <div class="absolute inset-0 backdrop-blur-[45px] bg-[#1c140f]/90"></div>
-                <div class="absolute inset-0 opacity-25 bookshelf-pane"></div>
+        <!-- THE FROSTED BOOKSHELF FOOTER -->
+        <footer class="mt-40 border-t-[20px] border-[#4a3426] relative overflow-hidden min-h-[600px] bg-[#000]">
+            <div class="absolute inset-0 backdrop-blur-[50px] bg-[#1c140f]/90 z-0"></div>
+            <div class="absolute inset-0 opacity-30 bookshelf-pane z-1"></div>
+            <div class="relative z-10 py-48 flex flex-col items-center justify-center">
+                <div id="footer-cup-container"></div>
             </div>
-            <div class="relative z-10 py-44 flex flex-col items-center justify-center"><div id="footer-cup-root"></div></div>
         </footer>
     </div>
 
-    <div id="modal-overlay" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/98 backdrop-blur-3xl transition-opacity duration-500">
-        <div class="bg-[#1c140f] max-w-6xl w-full max-h-[92vh] overflow-y-auto border-[22px] border-[#4a3426] shadow-[0_0_200px_rgba(0,0,0,1)] relative rounded-sm">
-            <button onclick="closeModal()" class="fixed md:absolute top-10 right-10 flex items-center gap-4 px-10 py-5 bg-red-900/30 text-white hover:bg-red-900/50 rounded-sm border border-white/10 transition-all z-[210] backdrop-blur-md font-black uppercase text-[12px] tracking-widest">
-                Back to List
+    <!-- THE NEWS MODAL (Expanded View) -->
+    <div id="expanded-view" class="fixed inset-0 z-[300] hidden bg-black/98 backdrop-blur-3xl overflow-y-auto">
+        <div class="max-w-6xl mx-auto px-6 pt-32 pb-40 relative">
+            
+            <!-- PROMIMNENT BACK BUTTON -->
+            <button onclick="closeModal()" class="fixed top-8 left-6 md:left-20 z-[400] flex items-center gap-4 bg-red-700 text-white px-8 py-5 font-black uppercase text-xs tracking-widest shadow-2xl hover:bg-red-600 active:scale-95 transition-all">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                BACK TO LIST
             </button>
-            <div id="modal-body" class="flex flex-col md:flex-row p-12 md:p-24 gap-20"></div>
+
+            <div id="modal-content" class="flex flex-col md:flex-row gap-20 items-start">
+                <!-- Content injected here -->
+            </div>
         </div>
     </div>
 
     <script>
         const apiKey = "";
         let activeTab = 'favorites';
-        let nytSubTab = 'fiction';
-        const marchDate = "Sunday, March 29, 2026";
+        let activeNytTab = 'fiction';
+        const globalDate = "Sunday, March 29, 2026";
 
-        const DATA = {
+        const ARCHIVE = {
             favorites: [
-                { title: "Sherlock Holmes", author: "Sir Arthur Conan Doyle", prompt: "Victorian London gaslight 221B Baker Street silhouette detective aesthetic.", summary: "In the gaslit gloom of Victorian London, Arthur Conan Doyle introduces a mind that operates with the cold, precise machinery of a counting-house. Sherlock Holmes is not just a detective; he is a force of pure observation, reminding us that we see, but we do not observe. Every cigar ash and silent look is a syllable in the language of truth." },
-                { title: "Thief of Time", author: "Terry Pratchett", prompt: "Surreal clockwork landscape saffron monks Discworld style.", summary: "Wen the Eternally Surprised stood on a mountain and made some remark about the nature of time... Terry Pratchett weaves a brilliant tapestry of the Monks of History managing the ticking of the universe. It is a story where the end of the world is just another Tuesday, examining humanity through the eyes of those who manage the flow of hours." },
-                { title: "The Namesake", author: "Jhumpa Lahiri", prompt: "Literary oil painting portrait of Jhumpa Lahiri warm library light.", summary: "For Ashima Ganguli, life in Cambridge, Massachusetts, is a series of arrivals and departures that leave her heart adrift. Jhumpa Lahiri paints a masterpiece of the immigrant experience through the eyes of Gogol Ganguli. It is a story of names that feel like heavy coats, and the quiet, persistent ache of wanting to belong to two worlds at once." },
-                { title: "The Other Side of Midnight", author: "Sidney Sheldon", prompt: "Glamorous 1940s Paris and Greece cinematic noir silhouette.", summary: "A sweeping tale of revenge and obsession that spans decades and continents. Sheldon masterfully weaves the lives of a vengeful French actress and a dashing American pilot into a web of passion and betrayal. 'Passion is the only thing that matters,' the narrative pulses across the postwar European landscape, where love is a weapon and beauty is a trap." },
-                { title: "The Carpetbaggers", author: "Harold Robbins", prompt: "1930s Hollywood studio lot vintage silver aviation bold masculine.", summary: "The definitive saga of power, industry, and uninhibited desire. Loosely inspired by the life of Howard Hughes, Robbins chronicles the ruthless ascent of Jonas Cord. It is a visceral exploration of the 'men who took the world apart to see what made it tick,' written with a raw, driving intensity that redefined the modern bestseller." },
-                { title: "Krishnamurti's Notebook", author: "J. Krishnamurti", prompt: "Spiritual journal cover sharp leaf misty mountains.", summary: "In these pages, Krishnamurti records a state of mind that is 'beyond the reach of thought.' It is not a textbook of philosophy, but a living breath of awareness. 'The air was very still,' he writes, 'and the silence was not a thing to be measured by the mind.' A testament to a consciousness that sees the movement of life, unconditioned by the past." },
-                { title: "The Tao of Physics", author: "Fritjof Capra", prompt: "Cosmic fusion of particle tracks and Yin-Yang ethereal physics.", summary: "Capra explores the profound bridge between the rhythmic dance of subatomic particles and the ancient wisdom of Eastern mysticism. He reveals a universe that is not a collection of separate objects, but a complicated web of relations. 'The world view of the modern physicist is extremely similar to that of the Eastern mystic,' Capra argues." },
-                { title: "E = mc²", author: "David Bodanis", prompt: "Minimalist science cover glowing gold calligraphy equation.", summary: "The story of the most famous equation in history is not merely one of mathematics, but of human obsession and cosmic revelation. Bodanis brings to life the long lineage of thinkers who paved the way for Einstein. It is a biography of an idea that fundamentally altered our understanding of reality, showing that even a pebble contains the power of suns." },
-                { title: "A Bridge Across Forever", author: "Richard Bach", prompt: "Soulmates walking bridge of light reflective sea spiritual.", summary: "A soulmate is someone who has locks that fit our keys, and keys to fit our locks. Bach’s journey is a soaring exploration of love that transcends the boundaries of time and space. He reminds us that we are travelers on a path of learning, where the greatest mastery is found in the luminous connection between spirits who recognize each other in the dark." },
-                { title: "A Short History of Nearly Everything", author: "Bill Bryson", prompt: "Vintage scientific collage of fossils and galaxies.", summary: "With a curiosity that spans from the Big Bang to the discovery of the atom, Bryson takes us on a journey through the staggering improbability of our own existence. 'Welcome,' he says. 'And congratulations.' He chronicles the lives of eccentric geniuses and the immense, quiet forces of nature, reminding us that we are all, quite literally, made of stardust." },
-                { title: "Jonathan Livingston Seagull", author: "Richard Bach", prompt: "White seagull soaring ethereal sky light-drenched.", summary: "Heaven is not a place, and it is not a time. Heaven is being perfect. Jonathan is a gull who refuses to accept the mundane limits of the flock. While others fly only to find food, Jonathan flies to discover the truth of flight itself. It is a soaring fable about the courage to follow one's own mastery, touching the sun if we only dare to believe in our own wings." }
-            ]
+                { title: "Sherlock Holmes", author: "Sir Arthur Conan Doyle", prompt: "Gaslit 221B Baker Street London detective silhouette high detail.", summary: "In the gaslit gloom of Victorian London, Arthur Conan Doyle introduces a mind that operates with the cold, precise machinery of a counting-house. Sherlock Holmes is not just a detective; he is a force of pure observation, reminding us that we see, but we do not observe. Every cigar ash, every frayed cuff, and every silent look is a syllable in the language of truth." },
+                { title: "Thief of Time", author: "Terry Pratchett", prompt: "Clockwork landscape saffron monks surreal fantasy oil painting.", summary: "Wen the Eternally Surprised stood on a mountain and made some remark about the nature of time... Terry Pratchett weaves a brilliant tapestry of the Monks of History managing the ticking of the universe. It is a story where the end of the world is just another Tuesday, examining humanity through the eyes of those who manage the flow of hours from secret valleys." },
+                { title: "The Namesake", author: "Jhumpa Lahiri", prompt: "Realistic literary oil painting portrait of author Jhumpa Lahiri mahogany library.", summary: "For Ashima Ganguli, life in Cambridge, Massachusetts, is a series of arrivals and departures that leave her heart adrift. Jhumpa Lahiri paints a masterpiece of the immigrant experience through the eyes of Gogol Ganguli. It is a story of names that feel like heavy coats, and the quiet, persistent ache of wanting to belong to two worlds at once." },
+                { title: "The Other Side of Midnight", author: "Sidney Sheldon", prompt: "Glamorous 1940s Paris cinematic noir silhouette beautiful woman.", summary: "A sweeping tale of revenge and obsession that spans decades and continents. Sheldon masterfully weaves the lives of a vengeful French actress and a dashing American pilot into a web of passion and betrayal. 'Passion is the only thing that matters,' the narrative pulses across the postwar European landscape, where love is a weapon and beauty is a lethal trap." },
+                { title: "The Carpetbaggers", author: "Harold Robbins", prompt: "1930s Hollywood studio silver aviation bold masculine gold charcoal.", summary: "The definitive saga of power, industry, and uninhibited desire. Loosely inspired by the life of Howard Hughes, Robbins chronicles the ruthless ascent of Jonas Cord. It is a visceral exploration of the 'men who took the world apart to see what made it tick,' written with a raw, driving intensity that redefined the modern bestseller." },
+                { title: "Krishnamurti's Notebook", author: "J. Krishnamurti", prompt: "Spiritual journal cover sharp leaf misty mountains serene.", summary: "In these pages, Krishnamurti records a state of mind that is 'beyond the reach of thought.' It is not a textbook of philosophy, but a living breath of awareness. 'The air was very still,' he writes, 'and the silence was not a thing to be measured by the mind.' A testament to a consciousness that sees the movement of life, unconditioned by the past." },
+                { title: "The Tao of Physics", author: "Fritjof Capra", prompt: "Cosmic fusion particle tracks Yin-Yang symbolism ethereal physics.", summary: "Capra explores the profound bridge between the rhythmic dance of subatomic particles and the ancient wisdom of Eastern mysticism. He reveals a universe that is not a collection of separate objects, but a complicated web of relations. 'The world view of the modern physicist is extremely similar to that of the Eastern mystic,' Capra argues." },
+                { title: "E = mc²", author: "David Bodanis", prompt: "Minimalist science cover gold calligraphy equation deep black space.", summary: "The story of the most famous equation in history is not merely one of mathematics, but of human obsession and cosmic revelation. Bodanis brings to life the long lineage of thinkers who paved the way for Einstein. It is a biography of an idea that fundamentally altered our understanding of reality, showing that even a pebble contains the power of suns." },
+                { title: "A Bridge Across Forever", author: "Richard Bach", prompt: "Soulmates bridge of light reflective sea spiritual ethereal.", summary: "'A soulmate is someone who has locks that fit our keys, and keys to fit our locks.' Bach’s journey is a soaring exploration of love that transcends the boundaries of time and space. He reminds us that we are travelers on a path of learning, where the greatest mastery is found in the luminous connection between spirits who recognize each other in the dark." },
+                { title: "A Short History of Nearly Everything", author: "Bill Bryson", prompt: "Vintage scientific collage fossils galaxies discovery aesthetic.", summary: "With a curiosity that spans from the Big Bang to the discovery of the atom, Bryson takes us on a journey through the staggering improbability of our own existence. 'Welcome,' he says. 'And congratulations.' He chronicles the lives of eccentric geniuses and the immense, quiet forces of nature, reminding us that we are all, quite literally, made of stardust." },
+                { title: "Jonathan Livingston Seagull", author: "Richard Bach", prompt: "Minimalist book cover white seagull ethereal sky light-drenched.", summary: "'Heaven is not a place, and it is not a time. Heaven is being perfect.' Jonathan is a gull who refuses to accept the mundane limits of the flock. While others fly only to find food, Jonathan flies to discover the truth of flight itself. It is a soaring fable about the courage to follow one's own mastery, touching the sun if we only dare to believe in our own wings." }
+            ],
+            nyt: {
+                fiction: [
+                    { title: "The Women", author: "Kristin Hannah", summary: "A tribute to the forgotten heroism of the nurses who served in the Vietnam War." },
+                    { title: "Funny Story", author: "Emily Henry", summary: "A messy, hilarious story of heartbreak and unexpected roommates in a small town." },
+                    { title: "James", author: "Percival Everett", summary: "Huckleberry Finn reimagined from the perspective of Jim with agency and literacy." }
+                ],
+                nonfiction: [
+                    { title: "The Demon of Unrest", author: "Erik Larson", summary: "The five months between Lincoln’s election and the start of the Civil War." },
+                    { title: "The Anxious Generation", author: "Jonathan Haidt", summary: "The impact of phone-based childhood on the mental health of Gen Z." }
+                ]
+            },
+            pulitzer: [{ title: "James", author: "Percival Everett", summary: "Winner of the 2025 Pulitzer Prize for Fiction. A masterpiece of voice and history." }],
+            registry: [{ title: "Vigil", author: "George Saunders", summary: "Compassionate exploration of attention and care in a fractured world." }]
         };
 
-        const getCup = (isS) => `<div class="relative ${isS ? 'scale-50' : ''} flex flex-col items-center">
-            <div class="absolute -top-20 flex justify-center w-full pointer-events-none">
-                <svg width="150" height="150" viewBox="0 0 150 150" class="overflow-visible">
-                    <filter id="vF"><feGaussianBlur in="SourceGraphic" stdDeviation="5" /></filter>
-                    <g filter="url(#vF)">
-                        <path d="M60,120 C50,90 70,60 60,30" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" class="vapor-wisp opacity-30"></path>
-                        <path d="M75,120 C85,85 65,55 75,25" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" class="vapor-wisp opacity-40" style="animation-delay: 1.2s;"></path>
-                        <path d="M90,120 C100,90 80,60 90,30" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" class="vapor-wisp opacity-30" style="animation-delay: 0.6s;"></path>
-                    </g>
-                </svg>
-            </div>
-            <div class="relative flex items-center translate-y-4">
-                <div class="relative w-32 h-36 bg-gradient-to-br from-[#F5E6BE] via-[#D4AF37] to-[#8B7500] rounded-b-[44%] rounded-t-xl border-x-[2px] border-b-[10px] border-[#3d2b1f]/30 shadow-2xl overflow-hidden z-20">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-80"></div>
-                    <div class="absolute bottom-0 w-full h-14 overflow-hidden"><svg viewBox="0 0 100 40" preserveAspectRatio="none" class="w-full h-full opacity-80"><path d="M0,40 L12,18 L28,32 L48,8 L68,28 L88,15 L100,40 Z" fill="#1a0f0a"/></svg></div>
-                    <div class="absolute top-1.5 left-2 right-2 h-5 bg-[#0e0805] rounded-[50%] shadow-inner border-t-[3px] border-white/20"></div>
+        const getCup = (isS) => `
+            <div class="relative ${isS ? 'scale-50' : ''} flex flex-col items-center">
+                <div class="absolute -top-24"><svg width="150" height="150" viewBox="0 0 150 150"><filter id="vF"><feGaussianBlur stdDeviation="5"/></filter><g filter="url(#vF)">
+                    <path d="M60,120 C50,90 70,60 60,30" fill="none" stroke="white" stroke-width="8" class="vapor-wisp opacity-30"/>
+                    <path d="M75,120 C85,85 65,55 75,25" fill="none" stroke="white" stroke-width="10" class="vapor-wisp opacity-40" style="animation-delay: 1.2s"/>
+                    <path d="M90,120 C100,90 80,60 90,30" fill="none" stroke="white" stroke-width="7" class="vapor-wisp opacity-30" style="animation-delay: 0.6s"/>
+                </g></svg></div>
+                <div class="relative flex items-center translate-y-4">
+                    <div class="w-36 h-40 bg-gradient-to-br from-[#F5E6BE] via-[#D4AF37] to-[#8B7500] rounded-b-[44%] rounded-t-2xl shadow-[0_40px_80px_rgba(0,0,0,0.9)] relative overflow-hidden z-20">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-60"></div>
+                        <div class="absolute bottom-0 w-full h-16"><svg viewBox="0 0 100 40" preserveAspectRatio="none" class="w-full h-full opacity-90"><path d="M0,40 L12,18 L28,32 L48,8 L68,28 L88,15 L100,40 Z" fill="#1a0f0a"/></svg></div>
+                        <div class="absolute top-2 left-3 right-3 h-6 bg-[#0e0805] rounded-[50%] shadow-inner border-t-[4px] border-white/20"></div>
+                    </div>
+                    <div class="absolute -right-12 top-10 w-16 h-24 z-10"><div class="w-full h-full bg-gradient-to-r from-[#D4AF37] via-[#B8860B] to-[#8B7500] rounded-[28px] shadow-2xl"></div></div>
                 </div>
-                <div class="absolute -right-10 top-8 w-14 h-20 z-10"><div class="w-full h-full bg-gradient-to-r from-[#D4AF37] via-[#B8860B] to-[#8B7500] rounded-[24px] shadow-2xl"></div></div>
-            </div>
-        </div>`;
+            </div>`;
 
-        async function fetchImg(prompt) {
+        async function fetchImage(prompt) {
             try {
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ instances: { prompt: prompt }, parameters: { sampleCount: 1 } })
                 });
-                const res = await response.json();
-                if (res.predictions?.[0]?.bytesBase64Encoded) return `data:image/png;base64,${res.predictions[0].bytesBase64Encoded}`;
+                const result = await response.json();
+                if (result.predictions?.[0]?.bytesBase64Encoded) return `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
             } catch (e) {}
             return "https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=800";
         }
 
         function setTab(id) { activeTab = id; render(); }
-        function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+        function setNytSubTab(t) { activeNytTab = t; render(); }
+        function closeModal() { document.getElementById('expanded-view').classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
         function openBook(b) {
-            const m = document.getElementById('modal-overlay');
-            const c = document.getElementById('modal-body');
-            m.classList.remove('hidden');
+            const mod = document.getElementById('expanded-view');
+            const cont = document.getElementById('modal-content');
+            mod.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            c.innerHTML = `
-                <div class="md:w-2/5 aspect-[2/3] shadow-2xl border border-white/10 p-2 bg-black/40 self-start relative flex items-center justify-center rounded-sm overflow-hidden" id="modal-img">
+            cont.innerHTML = `
+                <div class="md:w-2/5 aspect-[2/3] bg-white/5 relative flex items-center justify-center shadow-2xl border border-white/10" id="modal-img-area">
                     <div class="loader-spin"></div>
                 </div>
-                <div class="flex-1 flex flex-col">
-                    <div class="mb-14">
-                        <h2 class="text-4xl md:text-7xl font-black text-white leading-tight mb-6 tracking-tighter italic border-l-[14px] border-red-900 pl-10">${b.title}</h2>
-                        <p class="text-2xl text-[#D4AF37] uppercase tracking-[0.6em] font-light">by ${b.author}</p>
+                <div class="flex-1">
+                    <h2 class="text-5xl md:text-8xl baaboi-title text-white mb-8 border-l-[16px] border-red-700 pl-10 leading-none">${b.title}</h2>
+                    <p class="baaboi-nav-item text-2xl text-[#D4AF37] mb-16 tracking-[0.5em]">Author: ${b.author}</p>
+                    <div class="h-[1px] w-full bg-white/10 mb-16"></div>
+                    <p class="text-3xl md:text-4xl font-light italic leading-relaxed text-[#f5efe8]/90 drop-cap">${b.summary}</p>
+                    <div class="mt-24 pt-16 border-t border-white/5 flex items-center gap-6">
+                        <div class="h-12 w-[2px] bg-red-700"></div>
+                        <span class="baaboi-nav-item text-xs text-white/30">Verified Archival Entry • Neil's View</span>
                     </div>
-                    <div class="relative"><p class="text-2xl md:text-3xl leading-relaxed text-[#f5efe8]/95 font-serif italic font-extralight tracking-wide summary-first-letter">${b.summary}</p></div>
                 </div>`;
-            fetchImg(b.prompt || `${b.title} book cover`).then(url => {
-                document.getElementById('modal-img').innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+            fetchImage(b.prompt || `${b.title} literary aesthetic`).then(u => {
+                document.getElementById('modal-img-area').innerHTML = `<img src="${u}" class="w-full h-full object-cover">`;
             });
         }
 
         function render() {
-            const tabs = [{ id: 'favorites', label: 'My Corner', icon: '❤️' }];
-            document.getElementById('tab-list').innerHTML = tabs.map(t => `<button onclick="setTab('${t.id}')" class="tab-active px-10 py-6 rounded-sm font-black uppercase text-[11px] tracking-[0.3em] flex items-center gap-3"><span>${t.icon}</span>${t.label}</button>`).join('');
-            document.getElementById('book-grid').innerHTML = DATA.favorites.map(b => `
-                <div onclick='openBook(${JSON.stringify(b).replace(/'/g, "&apos;")})' class="book-card group flex flex-col bg-[#2a1b14]/98 border-l-[16px] border-[#4a3426] p-10 md:p-12 cursor-pointer shadow-2xl">
-                    <div class="aspect-[2/3] mb-10 shadow-2xl border border-white/10 p-1 bg-black/40 relative flex items-center justify-center overflow-hidden" id="grid-img-${b.title.replace(/\s+/g, '')}"><div class="loader-spin"></div></div>
-                    <h3 class="text-2xl md:text-3xl font-black text-white italic tracking-tight mb-3">${b.title}</h3>
-                    <p class="text-[12px] font-black text-white/50 uppercase tracking-[0.4em]">${b.author}</p>
+            // Main Tabs
+            const tabs = [
+                { id: 'favorites', label: 'My Corner', icon: '❤️' },
+                { id: 'nyt', label: 'NYT Best', icon: '⭐' },
+                { id: 'pulitzer', label: 'Pulitzer', icon: '🏆' },
+                { id: 'registry', label: 'New Yorkers', icon: '🏛️' }
+            ];
+            document.getElementById('main-nav').innerHTML = tabs.map(t => `
+                <button onclick="setTab('${t.id}')" 
+                        class="h-full px-8 baaboi-nav-item text-[11px] text-white/50 flex items-center gap-3 transition-all ${activeTab === t.id ? 'nav-active' : ''}">
+                    <span class="text-sm">${t.icon}</span> ${t.label}
+                </button>`).join('');
+
+            // Sub Nav (NYT)
+            const snc = document.getElementById('sub-nav-container');
+            if (activeTab === 'nyt') {
+                snc.classList.remove('hidden');
+                document.getElementById('display-date').innerText = globalDate;
+                document.getElementById('btn-fiction').style.color = activeNytTab === 'fiction' ? 'white' : '';
+                document.getElementById('btn-fiction').style.borderBottom = activeNytTab === 'fiction' ? '2px solid #dc2626' : '';
+                document.getElementById('btn-nonfiction').style.color = activeNytTab === 'nonfiction' ? 'white' : '';
+                document.getElementById('btn-nonfiction').style.borderBottom = activeNytTab === 'nonfiction' ? '2px solid #dc2626' : '';
+            } else { snc.classList.add('hidden'); }
+
+            // Grid Items
+            const list = activeTab === 'nyt' ? ARCHIVE.nyt[activeNytTab] : ARCHIVE[activeTab];
+            document.getElementById('dashboard-grid').innerHTML = list.map(b => `
+                <div onclick='openBook(${JSON.stringify(b).replace(/'/g, "&apos;")})' class="bg-black/80 border-t-[8px] border-red-700 p-10 cursor-pointer hover:bg-white/5 transition-all shadow-2xl relative group overflow-hidden">
+                    <div class="aspect-[2/3] mb-10 bg-white/5 relative flex items-center justify-center overflow-hidden" id="img-${b.title.replace(/\s+/g, '')}">
+                        <div class="loader-spin"></div>
+                    </div>
+                    <h3 class="text-2xl baaboi-title text-white italic mb-4 leading-tight">${b.title}</h3>
+                    <p class="baaboi-nav-item text-[10px] text-white/40">${b.author}</p>
+                    <div class="absolute bottom-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
                 </div>`).join('');
-            DATA.favorites.forEach(b => {
-                fetchImg(b.prompt).then(url => {
-                    const el = document.getElementById(`grid-img-${b.title.replace(/\s+/g, '')}`);
-                    if (el) el.innerHTML = `<img src="${url}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">`;
+
+            list.forEach(b => {
+                fetchImage(b.prompt || b.title).then(u => {
+                    const el = document.getElementById(`img-${b.title.replace(/\s+/g, '')}`);
+                    if (el) el.innerHTML = `<img src="${u}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">`;
                 });
             });
         }
 
         window.onload = () => {
-            document.getElementById('header-cup-root').innerHTML = getCup(false);
-            document.getElementById('footer-cup-root').innerHTML = getCup(true);
+            document.getElementById('header-cup-container').innerHTML = getCup(false);
+            document.getElementById('footer-cup-container').innerHTML = getCup(true);
             render();
         };
     </script>

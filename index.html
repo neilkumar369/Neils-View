@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neil's View | Master Station</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-elegant: 'Instrument Serif', serif;
+            --font-sans: 'Inter', sans-serif;
+            --flw-gold: #d4af37;
+            --flw-sage: rgba(163, 190, 140, 0.12);
+            --flw-crimson: rgba(191, 97, 106, 0.15);
+        }
+
+        body { 
+            font-family: var(--font-sans);
+            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .elegant-text { font-family: var(--font-elegant); }
+        .italic-serif { 
+            font-family: var(--font-elegant); 
+            font-style: italic;
+        }
+
+        /* Unified Single Line Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .flw-glass-pane {
+            position: relative;
+            background: 
+                linear-gradient(135deg, var(--flw-sage) 0%, transparent 45%, var(--flw-crimson) 50%, transparent 55%, var(--flw-sage) 100%),
+                rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px) saturate(130%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4.5rem 2rem;
+            border-radius: 0.25rem;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.4), 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .fountain-lines {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glass-texture {
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .metallic-blue-gold {
+            background: linear-gradient(135deg, 
+                #1e3a8a 0%,    
+                #3b82f6 20%,   
+                #d4af37 45%,   
+                #fde68a 50%,   
+                #d4af37 55%,   
+                #3b82f6 80%,   
+                #1e3a8a 100%); 
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: metallicSheen 8s infinite linear;
+        }
+
+        @keyframes metallicSheen {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .glass-portal {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-portal:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="px-6 py-16 md:py-24">
+
+    <!-- Unified Status Bar -->
+    <div class="status-bar">
+        <span id="live-status"></span>
+        <span class="opacity-30">|</span>
+        <div class="flex items-center gap-2">
+            <span class="w-1 h-1 bg-blue-400/80 rounded-full animate-pulse"></span>
+            <span>San Diego, CA</span>
+        </div>
+    </div>
+
+    <!-- Header Section with Expanded Fountain Glass Pane -->
+    <div class="text-center mb-24 max-w-5xl w-full relative z-10">
+        <div class="flw-glass-pane">
+            
+            <!-- Arching Fountain Lines -->
+            <svg class="fountain-lines" viewBox="0 0 1000 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M500,400 Q500,150 500,0" stroke="rgba(212, 175, 55, 0.5)" fill="none" stroke-width="1.5"/>
+                <path d="M500,400 Q400,200 0,50" stroke="rgba(212, 175, 55, 0.3)" fill="none" stroke-width="0.8"/>
+                <path d="M500,400 Q250,300 0,150" stroke="rgba(212, 175, 55, 0.25)" fill="none" stroke-width="0.7"/>
+                <path d="M500,400 Q150,350 0,300" stroke="rgba(212, 175, 55, 0.2)" fill="none" stroke-width="0.6"/>
+                <path d="M500,400 Q500,100 0,0" stroke="rgba(212, 175, 55, 0.35)" fill="none" stroke-width="1"/>
+                <path d="M500,400 Q600,200 1000,50" stroke="rgba(212, 175, 55, 0.3)" fill="none" stroke-width="0.8"/>
+                <path d="M500,400 Q750,300 1000,150" stroke="rgba(212, 175, 55, 0.25)" fill="none" stroke-width="0.7"/>
+                <path d="M500,400 Q850,350 1000,300" stroke="rgba(212, 175, 55, 0.2)" fill="none" stroke-width="0.6"/>
+                <path d="M500,400 Q500,100 1000,0" stroke="rgba(212, 175, 55, 0.35)" fill="none" stroke-width="1"/>
+                <path d="M500,400 Q450,200 350,0" stroke="rgba(212, 175, 55, 0.25)" fill="none" stroke-width="0.8"/>
+                <path d="M500,400 Q550,200 650,0" stroke="rgba(212, 175, 55, 0.25)" fill="none" stroke-width="0.8"/>
+                <rect x="496" y="0" width="8" height="8" fill="rgba(212, 175, 55, 0.4)"/>
+            </svg>
+
+            <div class="glass-texture"></div>
+
+            <div class="relative z-10">
+                <p class="text-[9px] md:text-[10px] uppercase font-black tracking-[0.8em] text-white/50 mb-4 opacity-80">Welcome to</p>
+                <h1 class="text-7xl md:text-9xl elegant-text metallic-blue-gold mb-8 tracking-tighter leading-none">Neil's View</h1>
+                
+                <p class="italic-serif text-lg md:text-2xl text-blue-50/70 max-w-2xl mx-auto leading-relaxed px-4">
+                    A window into my blessed world... happy to be here, 
+                    <br class="hidden md:block">
+                    and even more grateful than yesterday.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Portal Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl w-full relative z-10">
+        <a href="weather.html" class="glass-portal rounded-[2rem] p-10 flex flex-col items-center text-center group">
+            <div class="w-16 h-16 mb-8 flex items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-400/20 text-3xl group-hover:scale-110 transition-transform">🌍</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Atmospheric Perspective</h2>
+            <p class="text-white/30 text-[11px] leading-relaxed mb-8 italic">Verified meteorological horizons visualized through frosted panes.</p>
+            <div class="px-6 py-2 rounded-full border border-white/10 bg-white/5 text-[8px] uppercase font-black tracking-[0.4em] text-white/40 group-hover:text-white transition-all">Enter Horizon</div>
+        </a>
+
+        <div class="glass-portal rounded-[2rem] p-10 flex flex-col items-center text-center group opacity-40">
+            <div class="w-16 h-16 mb-8 flex items-center justify-center rounded-2xl bg-amber-500/5 border border-amber-400/10 text-3xl grayscale">📚</div>
+            <h2 class="text-2xl elegant-text text-white/40 mb-4">Shoreline Collection</h2>
+            <p class="text-white/20 text-[11px] leading-relaxed mb-8 italic">A personal library of architectural and cultural curation.</p>
+            <div class="text-[8px] uppercase font-black tracking-[0.4em] text-white/10">In Construction</div>
+        </div>
+
+        <div class="glass-portal rounded-[2rem] p-10 flex flex-col items-center text-center group opacity-40">
+            <div class="w-16 h-16 mb-8 flex items-center justify-center rounded-2xl bg-emerald-500/5 border border-emerald-400/10 text-3xl grayscale">📈</div>
+            <h2 class="text-2xl elegant-text text-white/40 mb-4">Market Equities</h2>
+            <p class="text-white/20 text-[11px] leading-relaxed mb-8 italic">Verified economic perspectives and portfolio analysis.</p>
+            <div class="text-[8px] uppercase font-black tracking-[0.4em] text-white/10">Engineering</div>
+        </div>
+    </div>
+
+    <!-- Footer Area -->
+    <footer class="mt-32 pb-16 border-t border-white/5 pt-12 w-full text-center">
+        <p class="text-[9px] uppercase tracking-[0.6em] text-white/10 font-bold italic mb-4">
+            Neil's View 2026 • Engineered for Precision
+        </p>
+        <p class="italic-serif text-white/20 text-lg">Gratitude in every perspective.</p>
+    </footer>
+
+    <script>
+        function updateStatus() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: true 
+            });
+            const dateStr = now.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
+            // Combining date and time into one element
+            document.getElementById('live-status').textContent = `${dateStr} • ${timeStr}`;
+        }
+
+        setInterval(updateStatus, 1000);
+        updateStatus();
+    </script>
+
+</body>
+</html>

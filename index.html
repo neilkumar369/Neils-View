@@ -32,7 +32,6 @@
         .elegant-text { font-family: var(--font-elegant); }
         .italic-serif { font-family: var(--font-elegant); font-style: italic; }
 
-        /* Unified Single Line Status Bar */
         .status-bar {
             position: absolute;
             top: 1.5rem;
@@ -51,13 +50,11 @@
 
         .flw-glass-pane {
             position: relative;
-            background: 
-                linear-gradient(135deg, var(--flw-sage) 0%, transparent 45%, var(--flw-crimson) 50%, transparent 55%, var(--flw-sage) 100%),
-                rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, var(--flw-sage) 0%, transparent 45%, var(--flw-crimson) 50%, transparent 55%, var(--flw-sage) 100%), rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px) saturate(150%);
             -webkit-backdrop-filter: blur(20px) saturate(150%);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 4rem 2rem;
+            padding: 4.5rem 2rem;
             border-radius: 0.25rem;
             box-shadow: inset 0 0 60px rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,0.05);
             overflow: hidden;
@@ -92,45 +89,25 @@
             animation: metallicSheen 8s infinite linear;
         }
 
-        @keyframes metallicSheen {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
+        @keyframes metallicSheen { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
 
         .glass-portal {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px) saturate(120%);
             border: 1px solid rgba(255, 255, 255, 0.12);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px;
         }
 
-        .glass-portal:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(253, 230, 138, 0.4);
-        }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-portal:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.08); border-color: rgba(253, 230, 138, 0.4); }
     </style>
 </head>
 <body class="px-6 py-16 md:py-24">
-
-    <!-- Top Right Status Info -->
     <div class="status-bar">
-        <span id="live-status"></span>
-        <span class="opacity-30">|</span>
-        <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-            <span class="text-white/90">San Diego, CA</span>
-        </div>
+        <span id="live-status"></span> <span class="opacity-30">|</span>
+        <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span><span class="text-white/90">San Diego, CA</span></div>
     </div>
 
-    <!-- Header Section with FLW Fountain Glass Pane -->
     <div class="text-center mb-24 max-w-5xl w-full relative z-10">
         <div class="flw-glass-pane">
             <svg class="fountain-lines" viewBox="0 0 1000 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,56 +127,47 @@
                 <p class="text-[10px] md:text-xs uppercase font-black tracking-[0.8em] text-white/60 mb-4">Welcome to</p>
                 <h1 class="text-7xl md:text-9xl elegant-text metallic-blue-gold mb-8 tracking-tighter leading-none">Neil's View</h1>
                 <p class="italic-serif text-xl md:text-2xl text-blue-50 max-w-2xl mx-auto leading-relaxed px-4 opacity-90">
-                    A window into my blessed world... happy to be here, 
-                    <br class="hidden md:block">
-                    and even more grateful than yesterday.
+                    A window into my blessed world... happy to be here, <br class="hidden md:block"> and even more grateful than yesterday.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Main Portal Grid (4 Panes) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl w-full relative z-10">
-        
-        <!-- Portal 1: Atmospheric Perspective -->
-        <a href="weather.html" class="glass-portal rounded-[2rem] p-8 text-center group">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl w-full relative z-10 pb-12">
+        <a href="weather.html" class="glass-portal rounded-[2.5rem] p-10 text-center group">
             <div class="w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-blue-500/20 border border-blue-400/40 text-3xl group-hover:scale-110 transition-transform">🌍</div>
-            <h2 class="text-xl elegant-text text-[#fde68a] mb-3">Atmospheric Perspective</h2>
-            <p class="text-white/60 text-[10px] leading-relaxed mb-6 italic">Verified meteorological horizons visualized through frosted panes.</p>
-            <div class="px-6 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Enter Horizon</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Atmospheric Perspective</h2>
+            <p class="text-white/60 text-[11px] leading-relaxed mb-8 italic">Verified meteorological horizons visualized through frosted panes.</p>
+            <div class="px-8 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Enter Horizon</div>
         </a>
-
-        <!-- Portal 2: Shoreline Sanctuary -->
-        <a href="sanctuary.html" class="glass-portal rounded-[2rem] p-8 text-center group">
+        <a href="sanctuary.html" class="glass-portal rounded-[2.5rem] p-10 text-center group">
             <div class="w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-amber-500/20 border border-amber-400/40 text-3xl group-hover:scale-110 transition-transform">📚</div>
-            <h2 class="text-xl elegant-text text-[#fde68a] mb-3">Shoreline Sanctuary</h2>
-            <p class="text-white/60 text-[10px] leading-relaxed mb-6 italic">A private library of verified knowledge, architectural curation, and sanctuary books.</p>
-            <div class="px-6 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Enter Library</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Shoreline Sanctuary</h2>
+            <p class="text-white/60 text-[11px] leading-relaxed mb-8 italic">A private library of verified knowledge and architectural curation.</p>
+            <div class="px-8 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Enter Library</div>
         </a>
-
-        <!-- Portal 3: Market Equities -->
-        <a href="equities.html" class="glass-portal rounded-[2rem] p-8 text-center group">
+        <a href="equities.html" class="glass-portal rounded-[2.5rem] p-10 text-center group">
             <div class="w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-3xl group-hover:scale-110 transition-transform">📈</div>
-            <h2 class="text-xl elegant-text text-[#fde68a] mb-3">Market Equities</h2>
-            <p class="text-white/60 text-[10px] leading-relaxed mb-6 italic">Real-time verified analysis of market movements and strategic portfolio perspectives.</p>
-            <div class="px-6 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Open Markets</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Market Equities</h2>
+            <p class="text-white/60 text-[11px] leading-relaxed mb-8 italic">Real-time verified analysis of market movements.</p>
+            <div class="px-8 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Open Markets</div>
         </a>
-
-        <!-- Portal 4: Hormuz Transit Tracker -->
-        <a href="hormuz.html" class="glass-portal rounded-[2rem] p-8 text-center group">
+        <a href="hormuz.html" class="glass-portal rounded-[2.5rem] p-10 text-center group">
             <div class="w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-cyan-500/20 border border-cyan-400/40 text-3xl group-hover:scale-110 transition-transform">🚢</div>
-            <h2 class="text-xl elegant-text text-[#fde68a] mb-3">Hormuz Transit</h2>
-            <p class="text-white/60 text-[10px] leading-relaxed mb-6 italic">Strategic maritime monitoring of verified transit through the Strait of Hormuz.</p>
-            <div class="px-6 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Track Transit</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Hormuz Transit</h2>
+            <p class="text-white/60 text-[11px] leading-relaxed mb-8 italic">Strategic maritime monitoring of the Strait of Hormuz.</p>
+            <div class="px-8 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Track Transit</div>
         </a>
-
+        <a href="news.html" class="glass-portal rounded-[2.5rem] p-10 text-center group border-amber-500/20">
+            <div class="w-16 h-16 mb-6 flex items-center justify-center rounded-2xl bg-orange-500/20 border border-orange-400/40 text-3xl group-hover:scale-110 transition-transform">📰</div>
+            <h2 class="text-2xl elegant-text text-[#fde68a] mb-4">Baaboi News</h2>
+            <p class="text-white/60 text-[11px] leading-relaxed mb-8 italic">Nonsense for the day. Curated verified narratives.</p>
+            <div class="px-8 py-2 rounded-full border border-white/20 bg-white/10 text-[8px] uppercase font-black tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Read Nonsense</div>
+        </a>
     </div>
 
-    <!-- Footer Area -->
-    <footer class="mt-32 pb-16 border-t border-white/10 pt-12 w-full text-center">
-        <p class="text-[9px] uppercase tracking-[0.6em] text-white/20 font-bold italic mb-4">
-            Neil's View 2026 • Engineered for Precision
-        </p>
+    <footer class="mt-24 pb-16 border-t border-white/10 pt-12 w-full text-center">
+        <p class="text-[9px] uppercase tracking-[0.6em] text-white/20 font-bold italic mb-4">Neil's View 2026 • Engineered for Precision</p>
         <p class="italic-serif text-white/40 text-lg">Gratitude in every perspective.</p>
     </footer>
 
@@ -210,10 +178,8 @@
             const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
             document.getElementById('live-status').textContent = `${dateStr} • ${timeStr}`;
         }
-        setInterval(updateStatus, 1000);
-        updateStatus();
+        setInterval(updateStatus, 1000); updateStatus();
     </script>
-
 </body>
 </html>
 

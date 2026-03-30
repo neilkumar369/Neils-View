@@ -1,421 +1,369 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Book, BookOpen, Library, Bookmark, Star, Zap, 
-  ChevronRight, ArrowLeft, Share2, Check, 
-  Newspaper, Quote, MessageSquare, Clock, User
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoreline Sanctuary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 
-const CATEGORIES = [
-  { id: 'my_corner', name: 'My Corner', icon: Star },
-  { id: 'nyt_fiction', name: 'NYT Best Sellers: Fiction', icon: Book },
-  { id: 'nyt_nonfiction', name: 'NYT Best Sellers: Non-Fiction', icon: Newspaper },
-  { id: 'pulitzer_2025', name: 'Pulitzer Prize 2025', icon: Check },
-  { id: 'new_yorker', name: 'New Yorker Picks', icon: Library }
-];
+        :root {
+            --satin-pearl: #F8FAFC;
+            --metallic-silver: #94a3b8;
+            --metallic-gold: #d97706;
+            --tagline-yellow: #d97706;
+        }
 
-const BOOKS_DATA = {
-  my_corner: [
-    { 
-      id: 'mc1', 
-      title: "The Namesake", 
-      author: "Jhumpa Lahiri", 
-      summary: "A moving exploration of identity and cultural friction through Gogol Ganguli's journey between his Bengali roots and American reality.", 
-      type: "Modern Classic", 
-      excerpt: "“Pack a pillow and a blanket and see as much of the world as you can. You will not regret it.”",
-      review: "A debut novel of emotional clarity that establishes Lahiri as a master storyteller.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780618485222-L.jpg"
-    },
-    { 
-      id: 'mc2', 
-      title: "The Adventures of Sherlock Holmes", 
-      author: "Arthur Conan Doyle", 
-      summary: "The definitive collection of twelve stories featuring the world's most famous consulting detective, utilizing the art of deduction.", 
-      type: "Mystery Classic", 
-      excerpt: "“It is a capital mistake to theorize before one has data.”",
-      review: "The undisputed blueprint for modern detective fiction.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780140620719-L.jpg"
-    },
-    { 
-      id: 'mc3', 
-      title: "Thief of Time", 
-      author: "Terry Pratchett", 
-      summary: "A Discworld masterpiece where the Monks of History must save the world from a glass clock that threatens to stop time.", 
-      type: "Fantasy/Satire", 
-      excerpt: "“Wen considered the nature of time and understood that the universe is, instant by instant, recreated anew.”",
-      review: "Pratchett at his peak—blending quantum physics with razor-sharp wit.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780061031328-L.jpg" 
-    },
-    { 
-      id: 'mc4', 
-      title: "The Notebook", 
-      author: "J. Krishnamurti", 
-      summary: "The personal diary of the spiritual teacher, chronicling his daily perceptions and profound states of consciousness.", 
-      type: "Biography/Philosophy", 
-      excerpt: "“To be free of all authority is to die to everything of yesterday.”",
-      review: "An intimate document that reveals the profound psychological depth of a true observer.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780060647957-L.jpg"
-    },
-    { 
-      id: 'mc5', 
-      title: "The Bridge Across Forever", 
-      author: "Richard Bach", 
-      summary: "A deeply personal narrative exploring soulmates and the spiritual bonds that transcend time and space.", 
-      type: "Philosophical Romance", 
-      excerpt: "“A soulmate is someone who has locks that fit our keys, and keys to fit our locks.”",
-      review: "Bach continues his exploration of the metaphysical through a deeply touching lens.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780440108269-L.jpg"
-    },
-    { 
-      id: 'mc6', 
-      title: "Jonathan Livingston Seagull", 
-      author: "Richard Bach", 
-      summary: "A timeless fable about a seagull seeking the perfection of flight as a means to transcend mundane limitations.", 
-      type: "Fable", 
-      excerpt: "“Heaven is not a place, and it is not a time. Heaven is being perfect.”",
-      review: "A slim volume that continues to inspire seekers of freedom and mastery.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780743278904-L.jpg"
-    },
-    { 
-      id: 'mc7', 
-      title: "Kane and Abel", 
-      author: "Jeffrey Archer", 
-      summary: "A sprawling saga following two men born into vastly different worlds whose lives are destined to collide in a battle for power.", 
-      type: "Saga", 
-      excerpt: "“I do not intend to spend the rest of my life watching the slow decay of my father's dreams.”",
-      review: "The ultimate page-turner. Archer's grasp of pacing is second to none.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780312945398-L.jpg"
-    },
-    { 
-      id: 'mc8', 
-      title: "The Carpetbaggers", 
-      author: "Harold Robbins", 
-      summary: "A gritty look into the early days of aviation and the ruthless ambition driving the Hollywood studio system.", 
-      type: "Industrial Drama", 
-      excerpt: "“In this town, you don't get what you deserve, you get what you take.”",
-      review: "Robbins defined the blockbuster novel. A raw depiction of greed.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780671676490-L.jpg"
-    },
-    { 
-      id: 'mc9', 
-      title: "E=mc²: A Biography", 
-      author: "David Bodanis", 
-      summary: "The story of how Einstein's world-changing equation was built from the discoveries of his predecessors.", 
-      type: "Science History", 
-      excerpt: "“The equation is a doorway. On one side is matter, on the other is pure energy.”",
-      review: "Bodanis makes the most complex concept in physics feel like a thriller.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780333780336-L.jpg"
-    },
-    { 
-      id: 'mc10', 
-      title: "The Tao of Physics", 
-      author: "Fritjof Capra", 
-      summary: "An exploration of the striking parallels between the discoveries of modern subatomic physics and Eastern mysticism.", 
-      type: "Science/Spirituality", 
-      excerpt: "“The dance of the subatomic particles is the dance of the universe itself.”",
-      review: "A seminal work that bridged the gap between science and spiritual insight.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9781570625190-L.jpg"
-    },
-    { 
-      id: 'mc11', 
-      title: "A Short History of Nearly Everything", 
-      author: "Bill Bryson", 
-      summary: "A witty journey through the history of science, from the Big Bang to the rise of civilization.", 
-      type: "Non-Fiction", 
-      excerpt: "“We are all of us, even the most stationary, in a state of constant motion.”",
-      review: "Possibly the most entertaining science book ever written.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780767908184-L.jpg"
-    },
-    { 
-      id: 'mc12', 
-      title: "At Home", 
-      author: "Bill Bryson", 
-      summary: "An illuminating history of private life viewed through the evolution of the domestic home and common objects.", 
-      type: "Social History", 
-      excerpt: "“Houses aren't just where we live; they are manifestations of our habits.”",
-      review: "A fascinating trek through our own hallways.",
-      coverImage: "https://covers.openlibrary.org/b/isbn/9780385527378-L.jpg"
-    }
-  ],
-  nyt_fiction: [
-    { id: 'nf1', title: "The Women", author: "Kristin Hannah", summary: "A tribute to the nurses who served in the Vietnam War.", type: "Fiction", excerpt: "“The women we were will never forget.”", review: "Hannah’s most powerful work.", coverImage: "https://covers.openlibrary.org/b/isbn/9781250178633-L.jpg" },
-    { id: 'nf2', title: "Fourth Wing", author: "Rebecca Yarros", summary: "High-stakes fantasy at Basgiath War College.", type: "Fiction", excerpt: "“A dragon without its rider is a tragedy.”", review: "An absolute phenomenon.", coverImage: "https://covers.openlibrary.org/b/isbn/9781649374042-L.jpg" }
-  ],
-  nyt_nonfiction: [
-    { id: 'nn1', title: "The Anxious Generation", author: "Jonathan Haidt", summary: "The investigation into the rewiring of childhood by smartphones.", type: "Non-Fiction", excerpt: "“We have traded play-based childhood for phone-based childhood.”", review: "An essential wake-up call.", coverImage: "https://covers.openlibrary.org/b/isbn/9780593655030-L.jpg" }
-  ],
-  pulitzer_2025: [
-    { id: 'p1', title: "North Woods", author: "Daniel Mason", summary: "The 2025 Fiction Winner: A novel about a New England house through centuries.", type: "Winner", excerpt: "“A house is the sediment of those who lived within it.”", review: "A masterwork of structure.", coverImage: "https://covers.openlibrary.org/b/isbn/9780593597033-L.jpg" }
-  ],
-  new_yorker: [
-    { id: 'ny1', title: "The Safekeep", author: "Yael van der Wouden", summary: "Simmering obsession in post-WWII Netherlands.", type: "Recommended", excerpt: "“Possession is a ghost.”", review: "A masterclass in tension.", coverImage: "https://covers.openlibrary.org/b/isbn/9781647427184-L.jpg" }
-  ]
-};
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--satin-pearl);
+            color: #1e293b;
+            overflow-x: hidden;
+        }
 
-const App = () => {
-  const [activeCategory, setActiveCategory] = useState('my_corner');
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [notification, setNotification] = useState(null);
-  const [isScrolling, setIsScrolling] = useState({ left: false, right: true });
-  const navRef = useRef(null);
-
-  // Intro Scroll Animation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (navRef.current) {
-        navRef.current.scrollTo({ left: 150, behavior: 'smooth' });
-        setTimeout(() => {
-          navRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        }, 800);
-      }
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleScroll = () => {
-    if (navRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = navRef.current;
-      setIsScrolling({
-        left: scrollLeft > 10,
-        right: scrollLeft < scrollWidth - clientWidth - 10
-      });
-    }
-  };
-
-  const showNotification = (msg) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 3000);
-  };
-
-  const handleShare = (book) => {
-    const text = `SHORELINE SANCTUARY: ${book.title} by ${book.author}`;
-    const dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = text;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-    showNotification("Archive Reference Copied");
-  };
-
-  const renderHeader = (name) => {
-    const parts = name.split(/:\s*/);
-    if (parts.length > 1) {
-      return (
-        <div className="flex flex-col items-start">
-          <span className="metallic-silver-gold-sheen font-black italic tracking-wide">{parts[0]}</span>
-          <span className="text-amber-600 text-[11px] font-bold uppercase tracking-widest opacity-80 italic leading-none mt-1"
-                style={{ fontFamily: '"Comic Sans MS", "Chalkboard SE", cursive' }}>
-            {parts[1]}
-          </span>
-        </div>
-      );
-    }
-    return <span className="metallic-silver-gold-sheen font-black italic tracking-wide">{name}</span>;
-  };
-
-  const BookGraphic = ({ src, title, size = "large" }) => {
-    const [hasError, setHasError] = useState(false);
-    if (hasError || !src) {
-      return (
-        <div className="w-full h-full flex items-center justify-center bg-slate-100 border border-slate-200">
-          <BookOpen size={size === "large" ? 80 : 20} className="text-slate-300" />
-        </div>
-      );
-    }
-    return (
-      <img 
-        src={src} 
-        alt={title}
-        onError={() => setHasError(true)}
-        className="w-full h-full object-cover shadow-xl transition-all duration-700"
-      />
-    );
-  };
-
-  const activeCategoryData = CATEGORIES.find(c => c.id === activeCategory);
-
-  return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans selection:bg-amber-100 overflow-x-hidden">
-      {/* NOTIFICATION */}
-      {notification && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-white border border-emerald-500/40 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 backdrop-blur-xl">
-          <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
-            <Check size={14} className="text-white" />
-          </div>
-          <span className="text-xs font-black uppercase tracking-widest text-emerald-600">{notification}</span>
-        </div>
-      )}
-
-      {/* HEADER 1: BRANDING - FIXED */}
-      <header className="fixed top-0 left-0 right-0 z-[80] bg-white/95 border-b border-slate-200 px-6 h-16 flex items-center justify-between shadow-sm backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => { setSelectedBook(null); setActiveCategory('my_corner'); }}
-            className="bg-slate-800 text-white p-2 rounded-xl rotate-3 shadow-lg group hover:rotate-0 transition-all border border-white/10 active:scale-95 flex-shrink-0"
-          >
-            <Zap size={20} className="fill-yellow-400 text-yellow-400" />
-          </button>
-          <div className="flex flex-col md:flex-row md:items-center md:gap-4 overflow-hidden">
-            <h1 className="text-xl font-black italic tracking-tighter leading-none whitespace-nowrap metallic-silver-gold-sheen">
-              SHORELINE SANCTUARY
-            </h1>
-            <div className="hidden md:block h-4 w-px bg-slate-200" />
-            <p className="text-[10px] uppercase font-bold tracking-[0.15em] text-amber-500 italic leading-tight whitespace-nowrap" 
-               style={{ fontFamily: '"Comic Sans MS", "Chalkboard SE", cursive' }}>
-              Lentil soup for the soul
-            </p>
-          </div>
-        </div>
-      </header>
-
-      {/* HEADER 2: MENU - FIXED */}
-      <nav className="fixed top-16 left-0 right-0 z-[70] bg-[#E0F2FE]/90 border-b border-sky-100 h-14 flex items-center shadow-sm backdrop-blur-md">
-        <div 
-          ref={navRef} 
-          onScroll={handleScroll}
-          className="flex items-center overflow-x-auto no-scrollbar px-6 gap-3 w-full max-w-7xl mx-auto scroll-smooth"
-        >
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => { setActiveCategory(cat.id); setSelectedBook(null); }}
-              className={`flex-shrink-0 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${activeCategory === cat.id ? 'bg-slate-800 text-white shadow-lg scale-105' : 'text-slate-500 hover:text-slate-800 hover:bg-white/50'}`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-        {/* LED INDICATORS */}
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-[-10px] flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-lg z-[45]">
-          <div className={`w-2 h-2 rounded-full ${isScrolling.left ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`} />
-          <div className="w-1.5 h-1.5 rounded-full bg-slate-100" /><div className="w-1.5 h-1.5 rounded-full bg-slate-100" />
-          <div className={`w-2 h-2 rounded-full ${isScrolling.right ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`} />
-        </div>
-      </nav>
-
-      {/* HEADER 3: BACK NAV - FIXED (READER ONLY) */}
-      {selectedBook && (
-        <div className="fixed top-[120px] left-0 right-0 z-[60] h-12 bg-white/90 backdrop-blur-md border-b border-slate-100 px-6 flex items-center shadow-sm">
-          <div className="max-w-5xl mx-auto w-full">
-            <button 
-              onClick={() => setSelectedBook(null)} 
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-sky-600 hover:text-sky-800 group transition-colors"
-            >
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Archive
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* MAIN CONTENT */}
-      <main className={`${selectedBook ? 'pt-[180px]' : 'pt-[140px]'} pb-24 max-w-7xl mx-auto px-6`}>
-        {!selectedBook ? (
-          <>
-            <div className="mb-8 border-b border-slate-200 pb-6">
-              <div className="flex items-center gap-4">
-                <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-sm" />
-                <h2 className="text-2xl md:text-3xl uppercase leading-none py-1">
-                  {renderHeader(activeCategoryData.name)}
-                </h2>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(BOOKS_DATA[activeCategory] || []).map((item) => (
-                <article 
-                  key={item.id} 
-                  onClick={() => setSelectedBook(item)} 
-                  className="relative rounded-[2.5rem] p-8 shadow-sm transition-all duration-500 border flex flex-col justify-between group cursor-pointer active:scale-[0.98] bg-white border-slate-200 hover:shadow-2xl hover:-translate-y-1 hover:border-emerald-200"
-                >
-                  <div className="flex flex-col flex-1">
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-3 py-1 bg-slate-50 rounded-lg border border-slate-100">{item.type}</span>
-                      <div className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">REF: {item.id}</div>
-                    </div>
-                    <h3 className="text-2xl font-black mb-1 leading-tight text-slate-800 group-hover:text-emerald-700 transition-colors">{item.title}</h3>
-                    <p className="text-amber-600 text-xs font-bold uppercase tracking-widest mb-6 opacity-80 italic">{item.author}</p>
-                    <p className="text-slate-500 text-sm leading-relaxed mb-8 line-clamp-3 group-hover:text-slate-700">{item.summary}</p>
-                  </div>
-                  <div className="flex items-center justify-between pt-6 border-t border-slate-50">
-                    <div className="w-10 h-14 rounded border border-slate-200 bg-white flex items-center justify-center overflow-hidden shadow-md transform group-hover:rotate-3 group-hover:scale-110 transition-all">
-                      <BookGraphic src={item.coverImage} title={item.title} size="small" />
-                    </div>
-                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-emerald-600 transition-all">
-                      View Work <ChevronRight size={16} className="text-emerald-500" />
-                    </button>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </>
-        ) : (
-          /* DRILL DOWN VIEW */
-          <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="bg-white border border-slate-200 rounded-[3rem] overflow-hidden shadow-2xl">
-              <div className="flex flex-col md:flex-row border-b border-slate-100">
-                <div className="w-full md:w-80 h-[400px] relative bg-slate-200 overflow-hidden">
-                  <BookGraphic src={selectedBook.coverImage} title={selectedBook.title} size="large" />
-                </div>
-                <div className="flex-1 p-10 md:p-12 flex flex-col justify-end bg-white relative">
-                   <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none mb-4">{selectedBook.title}</h2>
-                   <p className="text-amber-600 text-2xl font-bold uppercase tracking-widest italic opacity-90 mb-8">{selectedBook.author}</p>
-                   <div className="flex items-center gap-6 border-t border-slate-100 pt-8">
-                     <div className="flex flex-col"><span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Type</span><span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{selectedBook.type}</span></div>
-                     <div className="w-px h-8 bg-slate-100" />
-                     <div className="flex flex-col"><span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Date</span><span className="text-xs font-bold text-slate-500 uppercase tracking-widest">MARCH 29 2026</span></div>
-                   </div>
-                </div>
-              </div>
-              <div className="p-10 md:p-12">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                  <div className="lg:col-span-7">
-                    <div className="mb-10">
-                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-2"><Bookmark size={14} className="text-emerald-500" />Summary of Work</h4>
-                      <p className="text-slate-600 text-lg leading-relaxed font-medium">{selectedBook.summary}</p>
-                    </div>
-                    <div className="bg-sky-50 border border-sky-100 p-8 rounded-[2rem] relative">
-                      <Quote size={40} className="absolute top-2 right-4 text-sky-200 opacity-30" />
-                      <h4 className="text-[10px] font-black text-sky-600 uppercase tracking-[0.3em] mb-4">Notable Excerpt</h4>
-                      <p className="text-slate-800 text-xl italic font-serif leading-relaxed relative z-10">{selectedBook.excerpt}</p>
-                    </div>
-                  </div>
-                  <div className="lg:col-span-5 space-y-10">
-                    <div className="bg-slate-50 border border-slate-100 p-8 rounded-[2.5rem]">
-                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-2"><MessageSquare size={14} className="text-amber-500" />Review Highlight</h4>
-                      <p className="text-slate-600 text-sm leading-relaxed italic mb-4">"{selectedBook.review}"</p>
-                    </div>
-                    <button onClick={() => handleShare(selectedBook)} className="w-full flex items-center justify-center gap-3 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-slate-200">
-                      <Share2 size={16} /> Share Work Entry
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* FOOTER */}
-      <footer className="fixed bottom-0 left-0 right-0 h-10 bg-slate-100 border-t border-slate-200 text-slate-500 flex items-center px-8 z-[80]">
-        <div className="flex items-center justify-between w-full max-w-7xl mx-auto opacity-80">
-          <span className="text-[9px] font-black uppercase tracking-[0.3em]">SHORELINE SANCTUARY // MARCH 2026</span>
-          <span className="text-[9px] font-mono font-bold tracking-widest uppercase text-amber-600">Secure Access</span>
-        </div>
-      </footer>
-
-      <style dangerouslySetInnerHTML={{ __html: `
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .metallic-silver-gold-sheen {
-          background: linear-gradient(90deg, #475569 0%, #94a3b8 20%, #475569 40%, #d97706 50%, #475569 60%, #94a3b8 80%, #475569 100%);
-          background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
-          animation: metallic-shine 4s linear infinite;
-        }
-        @keyframes metallic-shine { to { background-position: 200% center; } }
-      `}} />
-    </div>
-  );
-};
 
-export default App;
+        .metallic-silver-gold-sheen {
+            background: linear-gradient(90deg, #475569 0%, #94a3b8 20%, #475569 40%, #d97706 50%, #475569 60%, #94a3b8 80%, #475569 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: metallic-shine 4s linear infinite;
+        }
+
+        @keyframes metallic-shine {
+            to { background-position: 200% center; }
+        }
+
+        .tagline-font {
+            font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive;
+        }
+
+        .book-card-hover:hover .cover-preview {
+            transform: rotate(3deg) scale(1.1);
+        }
+
+        header, nav, #back-bar {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-100">
+
+    <!-- NOTIFICATION POPUP -->
+    <div id="notification" class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] hidden bg-white border border-emerald-500/40 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
+            <i data-lucide="check" class="text-white w-3.5 h-3.5"></i>
+        </div>
+        <span id="notification-text" class="text-xs font-black uppercase tracking-widest text-emerald-600"></span>
+    </div>
+
+    <!-- HEADER 1: BRANDING (FIXED) -->
+    <header class="fixed top-0 left-0 right-0 z-[80] bg-white/95 border-b border-slate-200 px-6 h-16 flex items-center shadow-sm">
+        <div class="flex items-center gap-3 w-full max-w-7xl mx-auto">
+            <button onclick="resetToHome()" class="bg-slate-800 text-white p-2 rounded-xl rotate-3 shadow-lg hover:rotate-0 transition-all border border-white/10 active:scale-95 flex-shrink-0">
+                <i data-lucide="zap" class="fill-yellow-400 text-yellow-400 w-5 h-5"></i>
+            </button>
+            <div class="flex flex-col md:flex-row md:items-center md:gap-4 overflow-hidden">
+                <h1 class="text-xl font-black italic tracking-tighter leading-none whitespace-nowrap metallic-silver-gold-sheen">
+                    SHORELINE SANCTUARY
+                </h1>
+                <div class="hidden md:block h-4 w-px bg-slate-200"></div>
+                <p class="text-[10px] uppercase font-bold tracking-[0.15em] text-amber-500 italic leading-tight whitespace-nowrap tagline-font">
+                    Lentil soup for the soul
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- HEADER 2: MENU (FIXED) -->
+    <nav class="fixed top-16 left-0 right-0 z-[70] bg-[#E0F2FE]/90 border-b border-sky-100 h-14 flex items-center shadow-sm">
+        <div id="category-menu" class="flex items-center overflow-x-auto no-scrollbar px-6 gap-3 w-full max-w-7xl mx-auto scroll-smooth">
+            <!-- Categories injected by JS -->
+        </div>
+        <!-- LED INDICATORS -->
+        <div class="absolute left-1/2 -translate-x-1/2 bottom-[-10px] flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-lg z-[45]">
+            <div id="led-left" class="w-2 h-2 rounded-full bg-slate-300 transition-all"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-100"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-100"></div>
+            <div id="led-right" class="w-2 h-2 rounded-full bg-slate-300 transition-all"></div>
+        </div>
+    </nav>
+
+    <!-- HEADER 3: BACK NAV (FIXED - VISIBLE ONLY IN DRILL DOWN) -->
+    <div id="back-bar" class="fixed top-[120px] left-0 right-0 z-[60] h-12 bg-white/90 border-b border-slate-100 px-6 hidden flex items-center shadow-sm">
+        <div class="max-w-5xl mx-auto w-full">
+            <button onclick="closeBook()" class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-sky-600 hover:text-sky-800 group transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                Back to Archive
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <main id="main-content" class="pt-[140px] pb-24 max-w-7xl mx-auto px-6">
+        <!-- Content dynamically injected by JS -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="fixed bottom-0 left-0 right-0 h-10 bg-slate-100 border-t border-slate-200 text-slate-500 flex items-center px-8 z-[80]">
+        <div class="flex items-center justify-between w-full max-w-7xl mx-auto opacity-80">
+            <span class="text-[9px] font-black uppercase tracking-[0.3em]">SHORELINE SANCTUARY // MARCH 2026</span>
+            <span class="text-[9px] font-mono font-bold tracking-widest uppercase text-amber-600">Secure Access</span>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA ARCHIVE ---
+        const CATEGORIES = [
+            { id: 'my_corner', name: 'My Corner' },
+            { id: 'nyt_fiction', name: 'NYT Best Sellers: Fiction' },
+            { id: 'nyt_nonfiction', name: 'NYT Best Sellers: Non-Fiction' },
+            { id: 'pulitzer_2025', name: 'Pulitzer Prize 2025' },
+            { id: 'new_yorker', name: 'New Yorker Picks' }
+        ];
+
+        const BOOKS_DATA = {
+            my_corner: [
+                { id: 'mc1', title: "The Namesake", author: "Jhumpa Lahiri", summary: "A moving exploration of identity and cultural friction through Gogol Ganguli's journey between his Bengali roots and American reality.", type: "Modern Classic", excerpt: "“Pack a pillow and a blanket and see as much of the world as you can. You will not regret it.”", review: "A debut novel of emotional clarity that establishes Lahiri as a master storyteller.", coverImage: "https://covers.openlibrary.org/b/isbn/9780618485222-L.jpg" },
+                { id: 'mc2', title: "Sherlock Holmes", author: "Arthur Conan Doyle", summary: "The definitive collection of twelve stories featuring the world's most famous consulting detective, utilizing the art of deduction.", type: "Mystery Classic", excerpt: "“It is a capital mistake to theorize before one has data.”", review: "The undisputed blueprint for modern detective fiction.", coverImage: "https://covers.openlibrary.org/b/isbn/9780140620719-L.jpg" },
+                { id: 'mc3', title: "Thief of Time", author: "Terry Pratchett", summary: "A Discworld masterpiece where the Monks of History must save the world from a glass clock.", type: "Fantasy/Satire", excerpt: "“Wen considered the nature of time and understood that the universe is recreated anew.”", review: "Pratchett at his peak—blending quantum physics with razor-sharp wit.", coverImage: "https://covers.openlibrary.org/b/isbn/9780061031328-L.jpg" },
+                { id: 'mc4', title: "The Notebook", author: "J. Krishnamurti", summary: "The personal diary of the spiritual teacher, chronicling his daily perceptions and profound states of consciousness.", type: "Philosophy", excerpt: "“To be free of all authority is to die to everything of yesterday.”", review: "An intimate document that reveals the profound psychological depth of a true observer.", coverImage: "https://covers.openlibrary.org/b/isbn/9780060647957-L.jpg" },
+                { id: 'mc5', title: "The Bridge Across Forever", author: "Richard Bach", summary: "A deeply personal narrative exploring soulmates and the spiritual bonds that transcend time and space.", type: "Romance", excerpt: "“A soulmate is someone who has locks that fit our keys, and keys to fit our locks.”", review: "Bach continues his exploration of the metaphysical through a deeply touching lens.", coverImage: "https://covers.openlibrary.org/b/isbn/9780440108269-L.jpg" },
+                { id: 'mc6', title: "Kane and Abel", author: "Jeffrey Archer", summary: "A sprawling saga following two men born into vastly different worlds whose lives are destined to collide in an epic battle for power.", type: "Saga", excerpt: "“I do not intend to spend the rest of my life watching the slow decay of my father's dreams.”", review: "The ultimate page-turner. Archer's grasp of pacing is second to none.", coverImage: "https://covers.openlibrary.org/b/isbn/9780312945398-L.jpg" },
+                { id: 'mc7', title: "A Short History of Nearly Everything", author: "Bill Bryson", summary: "A witty journey through the history of science, from the Big Bang to the rise of civilization.", type: "Non-Fiction", excerpt: "“We are all of us in a state of constant motion.”", review: "Possibly the most entertaining science book ever written.", coverImage: "https://covers.openlibrary.org/b/isbn/9780767908184-L.jpg" }
+            ],
+            nyt_fiction: [
+                { id: 'nf1', title: "The Women", author: "Kristin Hannah", summary: "A tribute to the nurses who served in the Vietnam War.", type: "Fiction", excerpt: "“The women we were will never forget.”", review: "Hannah’s most powerful work.", coverImage: "https://covers.openlibrary.org/b/isbn/9781250178633-L.jpg" },
+                { id: 'nf2', title: "Fourth Wing", author: "Rebecca Yarros", summary: "High-stakes fantasy at Basgiath War College.", type: "Fiction", excerpt: "“A dragon without its rider is a tragedy.”", review: "An absolute phenomenon.", coverImage: "https://covers.openlibrary.org/b/isbn/9781649374042-L.jpg" }
+            ],
+            nyt_nonfiction: [
+                { id: 'nn1', title: "The Anxious Generation", author: "Jonathan Haidt", summary: "The investigation into the rewiring of childhood by smartphones.", type: "Non-Fiction", excerpt: "“We have traded play-based childhood for phone-based childhood.”", review: "An essential wake-up call.", coverImage: "https://covers.openlibrary.org/b/isbn/9780593655030-L.jpg" }
+            ],
+            pulitzer_2025: [
+                { id: 'p1', title: "North Woods", author: "Daniel Mason", summary: "The 2025 Fiction Winner: A novel about a New England house through centuries.", type: "Winner", excerpt: "“A house is the sediment of those who lived within it.”", review: "A masterwork of structure.", coverImage: "https://covers.openlibrary.org/b/isbn/9780593597033-L.jpg" }
+            ],
+            new_yorker: [
+                { id: 'ny1', title: "The Safekeep", author: "Yael van der Wouden", summary: "Simmering obsession in post-WWII Netherlands.", type: "Recommended", excerpt: "“Possession is a ghost.”", review: "A masterclass in tension.", coverImage: "https://covers.openlibrary.org/b/isbn/9781647427184-L.jpg" }
+            ]
+        };
+
+        // --- STATE MANAGER ---
+        let activeCategory = 'my_corner';
+        let selectedBook = null;
+
+        // --- APP LOGIC ---
+        function init() {
+            renderMenu();
+            renderContent();
+            lucide.createIcons();
+            runIntroScroll();
+        }
+
+        async function runIntroScroll() {
+            const menu = document.getElementById('category-menu');
+            await new Promise(r => setTimeout(r, 1200));
+            menu.scrollTo({ left: 150, behavior: 'smooth' });
+            await new Promise(r => setTimeout(r, 800));
+            menu.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('category-menu');
+            container.innerHTML = CATEGORIES.map(cat => `
+                <button onclick="setCategory('${cat.id}')" 
+                    class="flex-shrink-0 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 
+                    ${activeCategory === cat.id ? 'bg-slate-800 text-white shadow-lg scale-105' : 'text-slate-500 hover:text-slate-800 hover:bg-white/50'}">
+                    ${cat.name}
+                </button>
+            `).join('');
+            checkScroll();
+        }
+
+        function checkScroll() {
+            const menu = document.getElementById('category-menu');
+            const left = document.getElementById('led-left');
+            const right = document.getElementById('led-right');
+            
+            const isAtLeft = menu.scrollLeft <= 10;
+            const isAtRight = menu.scrollLeft >= (menu.scrollWidth - menu.clientWidth - 10);
+
+            left.className = `w-2 h-2 rounded-full transition-all ${isAtLeft ? 'bg-slate-300' : 'bg-emerald-500 animate-pulse'}`;
+            right.className = `w-2 h-2 rounded-full transition-all ${isAtRight ? 'bg-slate-300' : 'bg-emerald-500 animate-pulse'}`;
+        }
+
+        document.getElementById('category-menu').addEventListener('scroll', checkScroll);
+
+        function setCategory(id) {
+            activeCategory = id;
+            selectedBook = null;
+            renderMenu();
+            renderContent();
+        }
+
+        function resetToHome() {
+            activeCategory = 'my_corner';
+            selectedBook = null;
+            renderMenu();
+            renderContent();
+            showNotification("Returning to Master Station...");
+        }
+
+        function renderContent() {
+            const main = document.getElementById('main-content');
+            const backBar = document.getElementById('back-bar');
+
+            if (selectedBook) {
+                backBar.style.display = 'flex';
+                main.style.paddingTop = '180px';
+                renderDrillDown(main);
+            } else {
+                backBar.style.display = 'none';
+                main.style.paddingTop = '140px';
+                renderGrid(main);
+            }
+            lucide.createIcons();
+        }
+
+        function renderGrid(container) {
+            const cat = CATEGORIES.find(c => c.id === activeCategory);
+            const books = BOOKS_DATA[activeCategory] || [];
+            
+            // Format Title Parts for sub-labeling
+            const nameParts = cat.name.split(': ');
+            const primaryTitle = nameParts[0];
+            const subLabel = nameParts[1] ? `<span class="text-amber-600 text-[11px] font-bold uppercase tracking-widest opacity-80 italic leading-none mt-1 tagline-font">${nameParts[1]}</span>` : '';
+
+            container.innerHTML = `
+                <div class="mb-8 border-b border-slate-200 pb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-sm"></div>
+                        <div class="flex flex-col">
+                            <h2 class="text-2xl md:text-3xl uppercase leading-none font-black italic tracking-wide metallic-silver-gold-sheen">${primaryTitle}</h2>
+                            ${subLabel}
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${books.map(book => `
+                        <article onclick="openBook('${book.id}')" class="relative rounded-[2.5rem] p-8 shadow-sm transition-all duration-500 border flex flex-col justify-between group cursor-pointer active:scale-[0.98] bg-white border-slate-200 hover:shadow-2xl hover:-translate-y-1 hover:border-emerald-200 book-card-hover">
+                            <div class="flex flex-col flex-1">
+                                <div class="flex items-center justify-between mb-6">
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 px-3 py-1 bg-slate-50 rounded-lg border border-slate-100">${book.type}</span>
+                                    <div class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">REF: ${book.id}</div>
+                                </div>
+                                <h3 class="text-2xl font-black mb-1 leading-tight text-slate-800 group-hover:text-emerald-700 transition-colors">${book.title}</h3>
+                                <p class="text-amber-600 text-xs font-bold uppercase tracking-widest mb-6 opacity-80 italic">${book.author}</p>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-8 line-clamp-3 group-hover:text-slate-700">${book.summary}</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-6 border-t border-slate-50">
+                                <div class="w-10 h-14 rounded border border-slate-200 bg-white flex items-center justify-center overflow-hidden shadow-md transition-all duration-500 cover-preview">
+                                    <img src="${book.coverImage}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/150x200?text=Work'">
+                                </div>
+                                <button class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-emerald-600 transition-all">
+                                    View Work <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-500"></i>
+                                </button>
+                            </div>
+                        </article>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderDrillDown(container) {
+            const book = selectedBook;
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="bg-white border border-slate-200 rounded-[3rem] overflow-hidden shadow-2xl">
+                        <div class="flex flex-col md:flex-row border-b border-slate-100">
+                            <div class="w-full md:w-80 h-[400px] relative bg-slate-200 overflow-hidden group">
+                                <img src="${book.coverImage}" class="w-full h-full object-cover shadow-2xl transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/300x400?text=Cover'">
+                                <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white/80 to-transparent z-10"></div>
+                            </div>
+                            <div class="flex-1 p-10 md:p-12 flex flex-col justify-end bg-white relative">
+                               <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none mb-4">${book.title}</h2>
+                               <p class="text-amber-600 text-2xl font-bold uppercase tracking-widest italic opacity-90 mb-8">${book.author}</p>
+                               <div class="flex items-center gap-6 border-t border-slate-100 pt-8">
+                                 <div class="flex flex-col"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Type</span><span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">${book.type}</span></div>
+                                 <div class="w-px h-8 bg-slate-100"></div>
+                                 <div class="flex flex-col"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Date</span><span class="text-xs font-bold text-slate-500 uppercase tracking-widest">MARCH 29 2026</span></div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="p-10 md:p-12">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                                <div class="lg:col-span-7">
+                                    <div class="mb-10">
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                            <i data-lucide="bookmark" class="w-3.5 h-3.5 text-emerald-500"></i> Summary of Work
+                                        </h4>
+                                        <p class="text-slate-600 text-lg leading-relaxed font-medium">${book.summary}</p>
+                                    </div>
+                                    <div class="bg-sky-50 border border-sky-100 p-8 rounded-[2rem] relative">
+                                        <i data-lucide="quote" class="absolute top-2 right-4 text-sky-200 w-10 h-10 opacity-30"></i>
+                                        <h4 class="text-[10px] font-black text-sky-600 uppercase tracking-[0.3em] mb-4">Notable Excerpt</h4>
+                                        <p class="text-slate-800 text-xl italic font-serif leading-relaxed relative z-10">${book.excerpt}</p>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-5 space-y-10">
+                                    <div class="bg-slate-50 border border-slate-100 p-8 rounded-[2.5rem]">
+                                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                            <i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-500"></i> Review Highlight
+                                        </h4>
+                                        <p class="text-slate-600 text-sm leading-relaxed italic mb-4">"${book.review}"</p>
+                                    </div>
+                                    <button onclick="shareWork('${book.id}')" class="w-full flex items-center justify-center gap-3 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-slate-200 active:scale-95">
+                                        <i data-lucide="share-2" class="w-4 h-4"></i> Share Work Entry
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openBook(id) {
+            selectedBook = BOOKS_DATA[activeCategory].find(b => b.id === id);
+            renderContent();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeBook() {
+            selectedBook = null;
+            renderContent();
+        }
+
+        function shareWork(id) {
+            const book = BOOKS_DATA[activeCategory].find(b => b.id === id);
+            const text = `SHORELINE SANCTUARY: ${book.title} by ${book.author}`;
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            showNotification("Reference Copied to Clipboard");
+        }
+
+        function showNotification(text) {
+            const el = document.getElementById('notification');
+            const textEl = document.getElementById('notification-text');
+            textEl.innerText = text;
+            el.classList.remove('hidden');
+            setTimeout(() => {
+                el.classList.add('hidden');
+            }, 3000);
+        }
+
+        // --- START APP ---
+        window.onload = init;
+    </script>
+</body>
+</html>
 
